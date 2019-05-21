@@ -1,6 +1,7 @@
 package com.htp.controller;
 
 import com.htp.controller.requests.ShipmentCreateRequest;
+import com.htp.controller.requests.StockMaterialsRequests;
 import com.htp.domain.jdbc.Shipment;
 import com.htp.domain.hibernate.HibernateShipment;
 import com.htp.repository.jdbc.OperationCodesDao;
@@ -37,6 +38,13 @@ public class ShipmentController {
     public ResponseEntity<List<Shipment>> getAll() {
 
         return new ResponseEntity<>(shipmentDao.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/resultForNow")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<StockMaterialsRequests>> getResult() {
+
+        return new ResponseEntity<>(shipmentDao.findResult(), HttpStatus.OK);
     }
 
     @Autowired

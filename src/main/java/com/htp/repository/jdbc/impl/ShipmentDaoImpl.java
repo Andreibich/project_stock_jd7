@@ -1,5 +1,6 @@
 package com.htp.repository.jdbc.impl;
 
+import com.htp.controller.requests.StockMaterialsRequests;
 import com.htp.domain.jdbc.Shipment;
 import com.htp.repository.jdbc.ShipmentDao;
 import lombok.var;
@@ -67,6 +68,18 @@ public class ShipmentDaoImpl implements ShipmentDao {
         return shipment;
     }
 
+    private StockMaterialsRequests getMaterialsRowMapper(ResultSet resultSet, int i) throws SQLException {
+
+        var stockMaterials = new StockMaterialsRequests();
+
+        stockMaterials.setProductName(resultSet.getString(PRODUCT_CATALOG_NAME));
+        stockMaterials.setProductUnit(resultSet.getString(PRODUCT_CATALOG_UNIT));
+        stockMaterials.setQuantity(resultSet.getDouble(SHIPMENT_QUANTITY));
+        stockMaterials.setPrice(resultSet.getDouble(SHIPMENT_PRICE));
+
+        return stockMaterials;
+    }
+
     @Override
     public List<Shipment> findAll() {
         final String findAllQuery = "select * from shipment";
@@ -125,5 +138,22 @@ public class ShipmentDaoImpl implements ShipmentDao {
     @Override
     public Shipment update(Shipment entity) {
         return null;
+    }
+
+    @Override
+    public List<StockMaterialsRequests> findResult() {
+        final String resultQuery = "select t1.a1 as product_name, t1.a2 as product_unit, sum(t1.a3) as shipment_quantity, t1.a4 as shipment_price " +
+                "FROM " +
+                "(SELECT product_catalog.product_name as a1, product_catalog.product_unit as a2,  sum(receipt.receipt_quantity) as a3, receipt.receipt_price as a4 " +
+                "FROM receipt " +
+                "Inner JOIN product_catalog ON  product_catalog.product_id = receipt.product_catalog_id " +
+                "GROUP BY product_catalog.product_id, receipt.receipt_price  " +
+                "UNION " +
+                "SELECT product_catalog.product_name, product_catalog.product_unit, -sum(shipment.shipment_quantity), shipment.shipment_price  " +
+                "FROM shipment " +
+                "Inner JOIN product_catalog ON  product_catalog.product_id = shipment.product_catalog_id " +
+                "GROUP BY product_catalog.product_id) as t1 " +
+                "GROUP BY t1.a1, t1.a2, t1.a4";
+        return namedParameterJdbcTemplate.query(resultQuery, this::getMaterialsRowMapper);
     }
 }
