@@ -1,4 +1,4 @@
-package com.htp.controller;
+package com.htp.controller.jdbc;
 
 import com.htp.controller.requests.RoleCreateRequest;
 import com.htp.domain.hibernate.HibernateRole;
@@ -22,8 +22,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/roles")
-public class RoleController {
+@RequestMapping(value = "/rest/jdbc/roles")
+public class JdbcRoleController {
 
     @Autowired
     @Qualifier("roleDaoImpl")
@@ -36,24 +36,6 @@ public class RoleController {
         return new ResponseEntity<>(roleDao.findAll(), HttpStatus.OK);
     }
 
-
-    @Autowired
-    private HibernateRoleDao hibernateRoleDaoImpl;
-
-    @GetMapping("/all_hibernate_user")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HibernateRole>> getRolesHibernate() {
-        return new ResponseEntity<>(hibernateRoleDaoImpl.findAll(), HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Get role from server by id")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful getting role"),
-            @ApiResponse(code = 400, message = "Invalid role ID supplied"),
-            @ApiResponse(code = 401, message = "Lol kek"),
-            @ApiResponse(code = 404, message = "role was not found"),
-            @ApiResponse(code = 500, message = "Server error, something wrong")
-    })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<Role> getRoleById(@ApiParam("HibernateRoleDao Path Id") @PathVariable Long id) {
         Role role = roleDao.findById(id);

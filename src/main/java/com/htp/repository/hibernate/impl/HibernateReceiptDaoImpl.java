@@ -4,6 +4,7 @@ import com.htp.domain.hibernate.HibernateReceipt;
 import com.htp.repository.hibernate.HibernateReceiptDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -27,21 +28,37 @@ public class HibernateReceiptDaoImpl implements HibernateReceiptDao {
 
     @Override
     public HibernateReceipt findById(Long id) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return session.find(HibernateReceipt.class, id);
+        }
     }
 
     @Override
     public void delete(Long id) {
-
+        try (Session session = sessionFactory.openSession()) {
+            session.remove(findById(id));
+        }
     }
 
     @Override
     public HibernateReceipt save(HibernateReceipt entity) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            Long newHibernateReceiptID = (Long) session.save(entity);
+            transaction.commit();
+            return session.find(HibernateReceipt.class, newHibernateReceiptID);
+        }
     }
 
     @Override
     public HibernateReceipt update(HibernateReceipt entity) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            session.saveOrUpdate(entity);
+            transaction.commit();
+            return session.find(HibernateReceipt.class, entity.getReceiptId());
+        }
     }
 }

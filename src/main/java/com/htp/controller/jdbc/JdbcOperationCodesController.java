@@ -1,17 +1,10 @@
-package com.htp.controller;
+package com.htp.controller.jdbc;
 
 
 import com.htp.controller.requests.OperationCodesCreateRequest;
-import com.htp.domain.hibernate.HibernateOperationCodes;
-import com.htp.domain.hibernate.HibernateProductCatalog;
 import com.htp.domain.jdbc.OperationCodes;
-import com.htp.repository.hibernate.HibernateOperationCodesDao;
-import com.htp.repository.hibernate.HibernateProductCatalogDao;
 import com.htp.repository.jdbc.OperationCodesDao;
-import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,8 +17,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/operation_codes")
-public class OperationCodesController {
+@RequestMapping(value = "/rest/jdbc/operation_codes")
+public class JdbcOperationCodesController {
 
     @Autowired
     @Qualifier("operationCodesDaoImpl")
@@ -38,23 +31,6 @@ public class OperationCodesController {
         return new ResponseEntity<>(operationCodesDao.findAll(), HttpStatus.OK);
     }
 
-    @Autowired
-    private HibernateOperationCodesDao hibernateOperationCodesDaoImpl;
-
-    @GetMapping("/all_operation_codes")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HibernateOperationCodes>> getOperationCodesHibernate() {
-        return new ResponseEntity<>(hibernateOperationCodesDaoImpl.findAll(), HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Get operation code from server by id")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Successful getting code"),
-            @ApiResponse(code = 400, message = "Invalid code ID supplied"),
-            @ApiResponse(code = 401, message = "Lol kek"),
-            @ApiResponse(code = 404, message = "role was not found"),
-            @ApiResponse(code = 500, message = "Server error, something wrong")
-    })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<OperationCodes> getCodeById(@ApiParam("Code Path Id") @PathVariable Long id) {
         OperationCodes operationCodes = operationCodesDao.findById(id);
@@ -76,7 +52,7 @@ public class OperationCodesController {
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<OperationCodes> updateCode(@PathVariable("id") Long codeId,
-                                                   @RequestBody OperationCodesCreateRequest request) {
+                                                     @RequestBody OperationCodesCreateRequest request) {
         OperationCodes operationCodes = operationCodesDao.findById(codeId);
 
         operationCodes.setPurpose(request.getPurpose());

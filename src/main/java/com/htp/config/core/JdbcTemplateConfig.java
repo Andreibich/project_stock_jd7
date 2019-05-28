@@ -32,7 +32,7 @@ public class JdbcTemplateConfig {
         return new SimpleJdbcCall(dataSource).withProcedureName(procedureName);
     }
 
-    @Bean("txManager")
+    @Bean("transactionManager")
     public DataSourceTransactionManager getTransactionManager() {
         return new DataSourceTransactionManager(dataSource);
     }

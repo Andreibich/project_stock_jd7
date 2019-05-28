@@ -1,11 +1,9 @@
-package com.htp.controller;
+package com.htp.controller.hibernate;
 
 import com.htp.controller.requests.ProductCatalogCreateRequest;
 import com.htp.domain.hibernate.HibernateProductCatalog;
-import com.htp.domain.hibernate.HibernateUser;
 import com.htp.domain.jdbc.ProductCatalog;
 import com.htp.repository.hibernate.HibernateProductCatalogDao;
-import com.htp.repository.hibernate.HibernateUserDao;
 import com.htp.repository.jdbc.ProductCatalogDao;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,19 +21,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/products")
-public class ProductCatalogController {
-
-    @Autowired
-    @Qualifier("productCatalogDaoImpl")
-    private ProductCatalogDao productCatalogDao;
-
-    @GetMapping("/all")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<ProductCatalog>> getProducts() {
-
-        return new ResponseEntity<>(productCatalogDao.findAll(), HttpStatus.OK);
-    }
+@RequestMapping(value = "/rest/hibernate/products")
+public class HibernateProductCatalogController {
 
     @Autowired
     private HibernateProductCatalogDao hibernateProductCatalogDaoImpl;
@@ -55,43 +42,43 @@ public class ProductCatalogController {
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<ProductCatalog> getProductById(@ApiParam("Product Path Id") @PathVariable Long id) {
-        ProductCatalog productCatalog = productCatalogDao.findById(id);
+    public ResponseEntity<HibernateProductCatalog> getProductById(@ApiParam("Product Path Id") @PathVariable Long id) {
+        HibernateProductCatalog productCatalog = hibernateProductCatalogDaoImpl.findById(id);
         return new ResponseEntity<>(productCatalog, HttpStatus.OK);
     }
 
     @PostMapping
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<ProductCatalog> createProduct(@RequestBody ProductCatalogCreateRequest request) {
-        var productCatalog = new ProductCatalog();
+    public ResponseEntity<HibernateProductCatalog> createProduct(@RequestBody ProductCatalogCreateRequest request) {
+        var productCatalog = new HibernateProductCatalog();
 
         productCatalog.setProductName(request.getProductName());
         productCatalog.setProductUnit(request.getProductUnit());
 
 
-        ProductCatalog savedProduct = productCatalogDao.save(productCatalog);
+        HibernateProductCatalog savedProduct = hibernateProductCatalogDaoImpl.save(productCatalog);
 
         return new ResponseEntity<>(savedProduct, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ProductCatalog> updateroduct(@PathVariable("id") Long productId,
+    public ResponseEntity<HibernateProductCatalog> updateroduct(@PathVariable("id") Long productId,
                                                    @RequestBody ProductCatalogCreateRequest request) {
-        ProductCatalog productCatalog = productCatalogDao.findById(productId);
+        HibernateProductCatalog productCatalog = hibernateProductCatalogDaoImpl.findById(productId);
 
         productCatalog.setProductName(request.getProductName());
         productCatalog.setProductUnit(request.getProductUnit());
 
-        ProductCatalog updatedProduct = productCatalogDao.update(productCatalog);
+        HibernateProductCatalog updatedProduct = hibernateProductCatalogDaoImpl.update(productCatalog);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Long> deleteProduct(@PathVariable("id") Long productId) {
-        productCatalogDao.delete(productId);
+        hibernateProductCatalogDaoImpl.delete(productId);
         return new ResponseEntity<>(productId, HttpStatus.OK);
     }
 }

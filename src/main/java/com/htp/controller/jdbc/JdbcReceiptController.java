@@ -1,20 +1,13 @@
-package com.htp.controller;
+package com.htp.controller.jdbc;
 
 import com.htp.controller.requests.ReceiptCreateRequest;
 import com.htp.controller.requests.ReceiptResultRequest;
-import com.htp.domain.hibernate.HibernateReceipt;
-import com.htp.domain.hibernate.HibernateShipment;
 import com.htp.domain.jdbc.Receipt;
-import com.htp.repository.hibernate.HibernateReceiptDao;
-import com.htp.repository.hibernate.HibernateShipmentDao;
 import com.htp.repository.jdbc.CompaniesDao;
 import com.htp.repository.jdbc.ProductCatalogDao;
 import com.htp.repository.jdbc.UserDao;
 import com.htp.repository.jdbc.impl.ReceiptDaoImpl;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.var;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,10 +18,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(value = "Account", description = "APIs for working with users")
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/receipt")
-public class ReceiptController {
+@RequestMapping(value = "/rest/jdbc/receipt")
+public class JdbcReceiptController {
 
     @Autowired
     @Qualifier("receiptDaoImpl")
@@ -40,17 +34,6 @@ public class ReceiptController {
 
         return new ResponseEntity<>(receiptDao.findAll(), HttpStatus.OK);
     }
-
-    @Autowired
-    private HibernateReceiptDao hibernateReceiptDaoImpl;
-
-    @GetMapping("/all_hibernate_receipts")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HibernateReceipt>> getReceiptsHibernate() {
-        return new ResponseEntity<>(hibernateReceiptDaoImpl.findAll(), HttpStatus.OK);
-    }
-
-
 
     @GetMapping("/receipts")
     @ResponseStatus(HttpStatus.OK)
@@ -84,7 +67,6 @@ public class ReceiptController {
     private CompaniesDao companiesDao;
 
 
-
     @PostMapping
     @Transactional
     @ResponseStatus(HttpStatus.CREATED)
@@ -100,7 +82,6 @@ public class ReceiptController {
 
         Receipt savedReceipt = receiptDao.save(receipt);
 
-//        roleDao.findByRoleName(request.getRoleName().toLowerCase());
 
         return new ResponseEntity<>(savedReceipt, HttpStatus.OK);
     }

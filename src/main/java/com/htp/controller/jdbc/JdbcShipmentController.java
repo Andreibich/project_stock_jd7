@@ -1,13 +1,11 @@
-package com.htp.controller;
+package com.htp.controller.jdbc;
 
 import com.htp.controller.requests.ShipmentCreateRequest;
 import com.htp.controller.requests.StockMaterialsRequests;
 import com.htp.domain.jdbc.Shipment;
-import com.htp.domain.hibernate.HibernateShipment;
 import com.htp.repository.jdbc.OperationCodesDao;
 import com.htp.repository.jdbc.ProductCatalogDao;
 import com.htp.repository.jdbc.UserDao;
-import com.htp.repository.hibernate.HibernateShipmentDao;
 import com.htp.repository.jdbc.impl.ShipmentDaoImpl;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,8 +23,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/shipment")
-public class ShipmentController {
+@RequestMapping(value = "/rest/jdbc/shipment")
+public class JdbcShipmentController {
 
 
     @Autowired
@@ -47,23 +45,6 @@ public class ShipmentController {
         return new ResponseEntity<>(shipmentDao.findResult(), HttpStatus.OK);
     }
 
-    @Autowired
-    private HibernateShipmentDao hibernateShipmentDaoImpl;
-
-    @GetMapping("/all_hibernate_shipments")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HibernateShipment>> getShipmentHibernate() {
-        return new ResponseEntity<>(hibernateShipmentDaoImpl.findAll(), HttpStatus.OK);
-    }
-
-
-//    @GetMapping("/receipts")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity<List<ReceiptResultRequest>> getReceipts() {
-//
-//        return new ResponseEntity<>(receiptDao.findAllReceipts(), HttpStatus.OK);
-//    }
-
     @ApiOperation(value = "Get shipment from server by id")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Successful getting shipment"),
@@ -73,7 +54,7 @@ public class ShipmentController {
             @ApiResponse(code = 500, message = "Server error, something wrong")
     })
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Shipment> getShipmentById(@ApiParam("HibernateReceipt Path Id") @PathVariable Long id) {
+    public ResponseEntity<Shipment> getShipmentById(@ApiParam("HibernateShipment Path Id") @PathVariable Long id) {
         Shipment shipment = shipmentDao.findById(id);
         return new ResponseEntity<>(shipment, HttpStatus.OK);
     }
@@ -108,8 +89,9 @@ public class ShipmentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Long> deleteShipment(@PathVariable("id") Long receiptId) {
-        shipmentDao.delete(receiptId);
-        return new ResponseEntity<>(receiptId, HttpStatus.OK);
+    public ResponseEntity<Long> deleteShipment(@PathVariable("id") Long shipmentId) {
+        shipmentDao.delete(shipmentId);
+        return new ResponseEntity<>(shipmentId, HttpStatus.OK);
     }
+
 }

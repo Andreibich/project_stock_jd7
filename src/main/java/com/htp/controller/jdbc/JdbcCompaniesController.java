@@ -1,4 +1,4 @@
-package com.htp.controller;
+package com.htp.controller.jdbc;
 
 import com.htp.controller.requests.CompaniesCreateRequest;
 import com.htp.domain.hibernate.HibernateCompanies;
@@ -21,8 +21,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "/rest/companies")
-public class CompaniesController {
+@RequestMapping(value = "/rest/jdbc/companies")
+public class JdbcCompaniesController {
 
     @Autowired
     @Qualifier("companiesDaoImpl")
@@ -33,15 +33,6 @@ public class CompaniesController {
     public ResponseEntity<List<Companies>> getCompanies() {
 
         return new ResponseEntity<>(companiesDao.findAll(), HttpStatus.OK);
-    }
-
-    @Autowired
-    private HibernateCompaniesDao hibernateCompaniesDaoImpl;
-
-    @GetMapping("/all_hibernate_companies")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<HibernateCompanies>> getCompaniesHibernate() {
-        return new ResponseEntity<>(hibernateCompaniesDaoImpl.findAll(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Get company from server by id")

@@ -27,7 +27,7 @@ public class ShipmentDaoImpl implements ShipmentDao {
 
     private static final String SHIPMENT_ID = "shipment_id";
     private static final String SHIPMENT_DATE = "shipment_date";
-    private static final String RECEPIENT_COMPANY_ID = "recepient_company_id";
+    private static final String RECEPIENT_COMPANY_ID = "recipient_company_id";
     private static final String PRODUCT_CATALOG_ID = "product_catalog_id";
     private static final String SHIPMENT_QUANTITY = "shipment_quantity";
     private static final String SHIPMENT_PRICE = "shipment_price";
