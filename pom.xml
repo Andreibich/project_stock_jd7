@@ -7,8 +7,14 @@
     <groupId>com.htp.context</groupId>
     <artifactId>springhtp</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>common-jdbc</module>
+        <module>common-hibernate</module>
+        <module>rest-hibernate-api</module>
+        <module>rest-jdbc-api</module>
+    </modules>
 
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <properties>
         <aspectj.version>1.6.11</aspectj.version>
@@ -27,14 +33,14 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <!--<build>-->
+        <!--<plugins>-->
+            <!--<plugin>-->
+                <!--<groupId>org.springframework.boot</groupId>-->
+                <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
 
     <dependencies>
 
